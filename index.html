@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #635757;
+        }
+        .container{
+            text-align: center;
+        }
+        .board{
+            display: grid;
+            grid-template-columns: repeat(3,100px);
+            grid-gap: 10px;
+            margin-bottom: 20px;
+        }
+        .cell{
+            width: 100px;
+            height: 100px;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            cursor: pointer;
+        }
+        .cell:hover{
+            background-color: #f2f2f2;
+        }
+        #game-status{
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        #restart-button{
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        #restart-button:hover{
+            
+            background-color: lightgoldenrodyellow;
+        }
+    </style>
+</head>
+
+<body>
+  
+    
+    <div class="container">
+        <h1>TIC TAC TOE </h1>
+      <div class="board"> 
+
+         <div class="cell" data-cell></div>
+         <div class="cell" data-cell></div>
+         <div class="cell" data-cell></div>
+         <div class="cell" data-cell></div>
+         <div class="cell" data-cell></div>
+         <div class="cell" data-cell></div>
+         <div class="cell" data-cell></div>
+         <div class="cell" data-cell></div>
+         <div class="cell" data-cell></div>
+      </div>
+      <p id="game-status"></p>
+      <button id="restart-button">restart game</button>
+    </div>
+<script>const board = document.getElementById('board');
+    const cells = document.querySelectorAll('[data-cell]');
+    const gameStatus = document.getElementById('game-status');
+    const restartButton = document.getElementById('restart-button');
+    
+    let currentPlayer = 'X';
+    let gameActive = true;
+    let gameState = ['', '', '', '', '', '', '', '', ''];
+    
+    const winningConditions = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+    
+    function handleCellClick(clickedCellEvent) {
+      const clickedCell = clickedCellEvent.target;
+      const clickedCellIndex = parseInt(clickedCell.getAttribute('data-cell'));
+    
+      if (gameState[clickedCellIndex] !== '' || !gameActive) {
+        return;
+    }
+
+gameState[clickedCellIndex] = currentPlayer;
+clickedCell.textContent = currentPlayer;
+clickedCell.style.color = currentPlayer === 'X' ? 'blue' : 'red';
+
+if (checkWin()) {
+  gameActive = false;
+  gameStatus.textContent = ${currentPlayer} wins!;
+  return;
+}
+
+if (!gameState.includes('')) {
+  gameActive = false;
+  gameStatus.textContent = 'Draw!';
+  return;
+}
+
+currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+gameStatus.textContent = ${currentPlayer}'s turn;
+}
+
+function checkWin() {
+return winningConditions.some(combination => {
+  return combination.every(index => {
+    return gameState[index] === currentPlayer;
+  });
+});
+}
+function restartGame() {
+  currentPlayer = 'X';
+  gameActive = true;
+  gameState = ['', '', '', '', '', '', '', '', ''];
+  gameStatus.textContent = ${currentPlayer}'s turn;
+
+  cells.forEach(cell => {
+    cell.textContent = '';
+  });
+}
+
+cells.forEach(cell => {
+  cell.addEventListener('click', handleCellClick);
+});
+
+restartButton.addEventListener('click', restartGame);
+    </script>
+</body>
+</html>
